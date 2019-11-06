@@ -13,7 +13,8 @@ common.plugin = PLUGIN_NAME
 BASE_URL = "https://www.currenttime.tv"
 
 stream_url = {
-    'Auto': 'http://rfe-lh.akamaihd.net/i/rfe_tvmc5@383630/master.m3u8',
+    'Auto (hls)': 'http://rfe-lh.akamaihd.net/i/rfe_tvmc5@383630/master.m3u8',
+    'Auto (mpd)': 'https://rfeingest-i.akamaihd.net/dash/live/677329-b/DASH_RFE-TVMC5/manifest.mpd',
     '1080p':'http://rfe-lh.akamaihd.net/i/rfe_tvmc5@383630/index_1080_av-p.m3u8',
     '720p': 'http://rfe-lh.akamaihd.net/i/rfe_tvmc5@383630/index_0720_av-p.m3u8',
     '540p': 'http://rfe-lh.akamaihd.net/i/rfe_tvmc5@383630/index_0540_av-p.m3u8',
@@ -87,9 +88,19 @@ def live():
     item = xbmcgui.ListItem(path=purl)
     item.setInfo(type='video', infoLabels={'title':'Live'})
 
-    if quality == 'Auto':
+    if quality[:4] == 'Auto':
         item.setProperty('inputstreamaddon', 'inputstream.adaptive')
-        item.setProperty('inputstream.adaptive.manifest_type', 'hls')
+
+        if '.mpd' in purl:
+            item.setProperty('inputstream.adaptive.manifest_type', 'mpd')
+            item.setProperty('inputstream.adaptive.license_type', 'com.widevine.alpha')
+            item.setProperty('inputstream.adaptive.license_key', 'https://cwip-shaka-proxy.appspot.com/no_auth||R{SSM}|')
+        
+            item.setMimeType('application/dash+xml')
+            item.setContentLookup(False)
+        else:
+            item.setProperty('inputstream.adaptive.manifest_type', 'hls')
+
 
     xbmcplugin.setResolvedUrl(handle, True, item)
 
@@ -152,11 +163,6 @@ def play_video(params):
 
     item = xbmcgui.ListItem(path=purl)
 
-    if quality == 'Auto':
-        if '.mpd' in purl:
-            item.setProperty('inputstreamaddon', 'inputstream.adaptive')
-            item.setProperty('inputstream.adaptive.manifest_type', 'mpd')
-
     xbmcplugin.setResolvedUrl(handle, True, item)
 
 
@@ -206,18 +212,18 @@ mode = params.get('mode', '')
 if mode == '':
     main_menu()
 
-if mode == 'live':
+elif mode == 'live':
     live()
 
-if mode == 'programs':
+elif mode == 'programs':
     programs()
 
-if mode == 'program':
+elif mode == 'program':
     program(params)
 
-if mode == 'play':
+elif mode == 'play':
     play_video(params)
 
-if mode == 'cleancache':
+elif mode == 'cleancache':
     from tccleaner import TextureCacheCleaner as tcc
     tcc().remove_like('%currenttime.tv%', True)
