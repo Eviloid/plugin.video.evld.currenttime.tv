@@ -58,6 +58,7 @@ def get_html(url, params={}, noerror=True):
 
 def main_menu():
     add_item('[B]Смотреть ТВ[/B]', {'mode':'live'}, icon=icon, fanart=fanart, isPlayable=True)
+    show_content({'mode':'program', 'u':'p/7363.html'}) # Новости. Коротко (последний выпуск)
     add_item('Избранные программы', {'mode':'programs'}, fanart=fanart, isFolder=True)
     add_item('Эфиры', {'mode':'program', 'u':'z/17317'}, fanart=fanart, isFolder=True)
     add_item('Репортажи', {'mode':'program', 'u':'report/episodes'}, fanart=fanart, isFolder=True)
@@ -100,7 +101,6 @@ def live():
             item.setContentLookup(False)
         else:
             item.setProperty('inputstream.adaptive.manifest_type', 'hls')
-
 
     xbmcplugin.setResolvedUrl(handle, True, item)
 
