@@ -44,6 +44,10 @@ fanarts = {
     'amerika/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'amerika.jpg'))
 }
 
+icons = {
+    'z/21701':xbmc.translatePath(os.path.join(Pdir, 'media', 'listen.png'))
+}
+
 xbmcplugin.setContent(handle, 'videos')
 
 def get_html(url, params={}, noerror=True):
@@ -78,7 +82,7 @@ def programs():
     add_item('Смотри в оба', {'mode':'program', 'u':'smotrivoba/episodes'}, icon=icon, fanart=fanarts['smotrivoba/episodes'], isFolder=True)
     add_item('Азия', {'mode':'program', 'u':'asia/episodes'}, icon=icon, fanart=fanarts['asia/episodes'], isFolder=True)
     add_item('Америка', {'mode':'program', 'u':'amerika/episodes'}, icon=icon, fanart=fanarts['amerika/episodes'], isFolder=True)
-
+    add_item('Послушайте! Олевский', {'mode':'program', 'u':'z/21701'}, icon=icons['z/21701'], fanart=fanart, plot='Слушайте подкасты Тимура Олевского. Журналист телеканала "Настоящее Время" ищет ответы на свои вопросы. "Я задумал этот подкаст для того, чтобы изучить и рассказать о том, что не идет у меня из головы", – говорит Олевский', isFolder=True)
     xbmcplugin.endOfDirectory(handle)
 
 
