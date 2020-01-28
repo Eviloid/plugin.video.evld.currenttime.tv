@@ -115,10 +115,10 @@ def show_content(params):
 
     html = get_html('%s/%s/' % (BASE_URL, url), {'p':page})
 
-    container = common.parseDOM(html, 'div', attrs={'class':'media-block-wrap'})
-    videos = common.parseDOM(container, 'a', attrs={'class':'img-wrap'})
-    hrefs = common.parseDOM(container, 'a', attrs={'class':'img-wrap'}, ret="href")
-    titles = common.parseDOM(container, 'a', attrs={'class':'img-wrap'}, ret="title")
+    container = common.parseDOM(html, 'div', attrs={'class':'media-block .*?'})
+    videos = common.parseDOM(container, 'a', attrs={'class':'img-wrap.*?'})
+    hrefs = common.parseDOM(container, 'a', attrs={'class':'img-wrap.*?'}, ret="href")
+    titles = common.parseDOM(container, 'a', attrs={'class':'img-wrap.*?'}, ret="title")
 
     for i, video in enumerate(videos):
         img = common.parseDOM(video, 'img', ret='src')[0]
