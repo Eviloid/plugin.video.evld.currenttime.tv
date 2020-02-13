@@ -68,6 +68,7 @@ def main_menu():
     add_item('Репортажи', {'mode':'program', 'u':'report/episodes'}, fanart=fanart, isFolder=True)
     add_item('Интервью', {'mode':'program', 'u':'interview/episodes'}, fanart=fanart, isFolder=True)
     add_item('Все видео', {'mode':'program', 'u':'z/17192'}, fanart=fanart, isFolder=True)
+    add_item('Поиск', {'mode':'search'}, fanart=fanart, icon='DefaultAddonsSearch.png', isFolder=True)
 
     xbmcplugin.endOfDirectory(handle)
 
@@ -169,12 +170,51 @@ def play_video(params):
 
     xbmcplugin.setResolvedUrl(handle, True, item)
 
+def search(params):
+    page = int(params.get('p', 1))
+ 
+    keywords = urllib.unquote_plus(params.get('k', ''))
+
+    if not keywords:
+        kbd = xbmc.Keyboard('', 'Поиск:')
+        kbd.doModal()
+        if kbd.isConfirmed():
+            keywords = kbd.getText()
+
+    if keywords:
+        html = get_html('%s/s' % BASE_URL, {'k':keywords, 'tab':'video', 'pi':page, 'r':'any', 'pp':20})
+        container = common.parseDOM(html, 'div', attrs={'class':'media-block-wrap'})
+
+        videos = common.parseDOM(container, 'a', attrs={'class':'img-wrap.*?'})
+        hrefs = common.parseDOM(container, 'a', attrs={'class':'img-wrap.*?'}, ret="href")
+        titles = common.parseDOM(container, 'a', attrs={'class':'img-wrap.*?'}, ret="title")
+        dates = common.parseDOM(container, 'span', attrs={'class':'date .*?'})
+        infos = common.parseDOM(container, 'p', attrs={'class':'perex .*?'})
+
+        for i, video in enumerate(videos):
+            img = common.parseDOM(video, 'img', ret='src')[0]
+
+            thumb = re.sub(r'_w\w+', '_w512_r1', img)
+
+            title = common.replaceHTMLCodes(titles[i])
+            href = hrefs[i]
+            plot = '[B]%s[/B]\n%s' % (dates[i], common.replaceHTMLCodes(infos[i]))
+
+            add_item(title, {'mode':'play', 'u':href}, plot=plot, thumb=thumb, fanart=fanart, isPlayable=True)
+
+        if common.parseDOM(html, 'span', attrs={'class':'ico ico-arrow-forward'}):
+            params['p'] = page + 1
+            params['k'] = keywords
+            add_item('Далее > %i' % (params['p']), params, fanart=fanart, isFolder=True)
+
+        xbmcplugin.endOfDirectory(handle)
+
 
 def add_item(title, params={}, icon='', banner='', fanart='', poster='', thumb='', plot='', isFolder=False, isPlayable=False, url=None):
     if url == None: url = '%s?%s' % (sys.argv[0], urllib.urlencode(params))
 
     item = xbmcgui.ListItem(title, iconImage = icon, thumbnailImage = thumb)
-    item.setInfo(type='Video', infoLabels={'Title': title, 'Plot': plot})
+    item.setInfo(type='Video', infoLabels={'title': title, 'plot': plot})
 
     if isPlayable:
         item.setProperty('mediatype', 'video')
@@ -227,6 +267,9 @@ elif mode == 'program':
 
 elif mode == 'play':
     play_video(params)
+
+elif mode == 'search':
+    search(params)
 
 elif mode == 'cleancache':
     from tccleaner import TextureCacheCleaner as tcc
