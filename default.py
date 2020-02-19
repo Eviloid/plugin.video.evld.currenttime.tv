@@ -182,12 +182,8 @@ def search(params):
         kbd.doModal()
         if kbd.isConfirmed():
             keywords = kbd.getText()
-            xbmc.executebuiltin('Container.Update("%s?mode=search&k=%s", "replace")' % (sys.argv[0], urllib.quote_plus(keywords)))
-        else:
-            xbmcplugin.endOfDirectory(handle, False)
-            return
 
-    else:
+    if keywords:
         html = get_html('%s/s' % BASE_URL, {'k':keywords, 'tab':'video', 'pi':page, 'r':'any', 'pp':20})
         container = common.parseDOM(html, 'div', attrs={'class':'media-block-wrap'})
 
@@ -213,7 +209,7 @@ def search(params):
             params['k'] = keywords
             add_item('Далее > %i' % (params['p']), params, fanart=fanart, isFolder=True)
 
-    xbmcplugin.endOfDirectory(handle)
+        xbmcplugin.endOfDirectory(handle)
 
 
 def add_item(title, params={}, icon='', banner='', fanart='', poster='', thumb='', plot='', isFolder=False, isPlayable=False, url=None):
