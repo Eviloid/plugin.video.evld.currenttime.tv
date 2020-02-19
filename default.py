@@ -182,25 +182,26 @@ def search(params):
         kbd.doModal()
         if kbd.isConfirmed():
             keywords = kbd.getText()
-
-    if keywords:
+            if keywords:
+                xbmcplugin.endOfDirectory(handle)
+                xbmc.executebuiltin('Container.Update("%s?mode=search&k=%s", "replace")' % (sys.argv[0], urllib.quote_plus(keywords)))
+    else:
         html = get_html('%s/s' % BASE_URL, {'k':keywords, 'tab':'video', 'pi':page, 'r':'any', 'pp':20})
-        container = common.parseDOM(html, 'div', attrs={'class':'media-block-wrap'})
 
-        videos = common.parseDOM(container, 'a', attrs={'class':'img-wrap.*?'})
-        hrefs = common.parseDOM(container, 'a', attrs={'class':'img-wrap.*?'}, ret="href")
-        titles = common.parseDOM(container, 'a', attrs={'class':'img-wrap.*?'}, ret="title")
-        dates = common.parseDOM(container, 'span', attrs={'class':'date .*?'})
-        infos = common.parseDOM(container, 'p', attrs={'class':'perex .*?'})
+        videos = common.parseDOM(html, 'div', attrs={'class':'media-block '})
 
-        for i, video in enumerate(videos):
+        for video in videos:
             img = common.parseDOM(video, 'img', ret='src')[0]
+            href = common.parseDOM(video, 'a', attrs={'class':'img-wrap.*?'}, ret="href")[0]
+            title = common.parseDOM(video, 'a', attrs={'class':'img-wrap.*?'}, ret="title")[0]
+            date = common.parseDOM(video, 'span', attrs={'class':'date .*?'})[0]
 
             thumb = re.sub(r'_w\w+', '_w512_r1', img)
 
-            title = common.replaceHTMLCodes(titles[i])
-            href = hrefs[i]
-            plot = '[B]%s[/B]\n%s' % (dates[i], common.replaceHTMLCodes(infos[i]))
+            title = common.replaceHTMLCodes(title)
+
+            info = common.parseDOM(video, 'p', attrs={'class':'perex .*?'})
+            plot = '[B]%s[/B]\n%s' % (date, common.replaceHTMLCodes(info[0]) if info else '')
 
             add_item(title, {'mode':'play', 'u':href}, plot=plot, thumb=thumb, fanart=fanart, isPlayable=True)
 
