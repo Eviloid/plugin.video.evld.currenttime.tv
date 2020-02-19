@@ -70,7 +70,6 @@ def main_menu():
     add_item('Интервью', {'mode':'program', 'u':'interview/episodes'}, fanart=fanart, isFolder=True)
     add_item('Все видео', {'mode':'program', 'u':'z/17192'}, fanart=fanart, isFolder=True)
     add_item('Поиск', {'mode':'search'}, fanart=fanart, icon='DefaultAddonsSearch.png', isFolder=True)
-
     xbmcplugin.endOfDirectory(handle)
 
 
@@ -183,8 +182,12 @@ def search(params):
         kbd.doModal()
         if kbd.isConfirmed():
             keywords = kbd.getText()
+            xbmc.executebuiltin('Container.Update("%s?mode=search&k=%s", "replace")' % (sys.argv[0], urllib.quote_plus(keywords)))
+        else:
+            xbmcplugin.endOfDirectory(handle, False)
+            return
 
-    if keywords:
+    else:
         html = get_html('%s/s' % BASE_URL, {'k':keywords, 'tab':'video', 'pi':page, 'r':'any', 'pp':20})
         container = common.parseDOM(html, 'div', attrs={'class':'media-block-wrap'})
 
@@ -210,7 +213,7 @@ def search(params):
             params['k'] = keywords
             add_item('Далее > %i' % (params['p']), params, fanart=fanart, isFolder=True)
 
-        xbmcplugin.endOfDirectory(handle)
+    xbmcplugin.endOfDirectory(handle)
 
 
 def add_item(title, params={}, icon='', banner='', fanart='', poster='', thumb='', plot='', isFolder=False, isPlayable=False, url=None):
