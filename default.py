@@ -150,7 +150,7 @@ def program(params):
 
 def play_video(params):
 
-    html = get_html('%s/%s' % (BASE_URL, params['u']))
+    html = get_html('%s/%s' % (BASE_URL, urllib.unquote_plus(params['u'])))
 
     quality = addon.getSetting('VideoQuality')
 
@@ -172,9 +172,10 @@ def play_video(params):
 
     xbmcplugin.setResolvedUrl(handle, True, item)
 
+
 def search(params):
     page = int(params.get('p', 1))
- 
+
     keywords = urllib.unquote_plus(params.get('k', ''))
 
     if not keywords:
@@ -213,7 +214,7 @@ def search(params):
 
 
 def add_item(title, params={}, icon='', banner='', fanart='', poster='', thumb='', plot='', isFolder=False, isPlayable=False, url=None):
-    if url == None: url = '%s?%s' % (sys.argv[0], urllib.urlencode(params))
+    if url is None: url = '%s?%s' % (sys.argv[0], urllib.urlencode(params))
 
     item = xbmcgui.ListItem(title, iconImage = icon, thumbnailImage = thumb)
     item.setInfo(type='Video', infoLabels={'title': title, 'plot': plot})
