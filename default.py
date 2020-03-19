@@ -47,7 +47,8 @@ fanarts = {
 }
 
 icons = {
-    'z/21701':xbmc.translatePath(os.path.join(Pdir, 'media', 'listen.png'))
+    'z/21701':xbmc.translatePath(os.path.join(Pdir, 'media', 'listen.jpg')),
+    'z/21950':xbmc.translatePath(os.path.join(Pdir, 'media', 'kgb.jpg'))
 }
 
 xbmcplugin.setContent(handle, 'videos')
@@ -70,6 +71,7 @@ def main_menu():
     add_item('Репортажи', {'mode':'program', 'u':'report/episodes'}, fanart=fanart, isFolder=True)
     add_item('Интервью', {'mode':'program', 'u':'interview/episodes'}, fanart=fanart, isFolder=True)
     add_item('Все видео', {'mode':'program', 'u':'z/17192'}, fanart=fanart, isFolder=True)
+    add_item('Подкасты', {'mode':'podcasts'}, fanart=fanart, isFolder=True)
     add_item('Поиск', {'mode':'search'}, fanart=fanart, icon='DefaultAddonsSearch.png', isFolder=True)
     xbmcplugin.endOfDirectory(handle)
 
@@ -86,7 +88,12 @@ def programs():
     add_item('Ждём в гости', {'mode':'program', 'u':'welcome/episodes'}, icon=icon, fanart=fanarts['welcome/episodes'], isFolder=True)
     add_item('Азия', {'mode':'program', 'u':'asia/episodes'}, icon=icon, fanart=fanarts['asia/episodes'], isFolder=True)
     add_item('Америка', {'mode':'program', 'u':'amerika/episodes'}, icon=icon, fanart=fanarts['amerika/episodes'], isFolder=True)
+    xbmcplugin.endOfDirectory(handle)
+
+
+def podcasts():
     add_item('Послушайте! Олевский', {'mode':'program', 'u':'z/21701'}, icon=icons['z/21701'], fanart=fanart, plot='Слушайте подкасты Тимура Олевского. Журналист телеканала "Настоящее Время" ищет ответы на свои вопросы. "Я задумал этот подкаст для того, чтобы изучить и рассказать о том, что не идет у меня из головы", – говорит Олевский', isFolder=True)
+    add_item('Архивы КГБ', {'mode':'program', 'u':'z/21950'}, icon=icons['z/21950'], fanart=fanart, plot='Подкаст "Архивы КГБ" — это истории, найденные киевским журналистом и историком Эдуардом Андрющенко в рассекреченных документах КГБ Украины.', isFolder=True)
     xbmcplugin.endOfDirectory(handle)
 
 
@@ -145,7 +152,6 @@ def show_content(params):
 
 def program(params):
     show_content(params)
-
     xbmcplugin.endOfDirectory(handle)
 
 
@@ -266,6 +272,9 @@ elif mode == 'live':
 
 elif mode == 'programs':
     programs()
+
+elif mode == 'podcasts':
+    podcasts()
 
 elif mode == 'program':
     program(params)
