@@ -43,6 +43,7 @@ fanarts = {
     'smotrivoba/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'smotrivoba.jpg')),
     'welcome/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'welcome.jpg')),
     'asia/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'asia.jpg')),
+    'baltia/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'baltia.jpg')),
     'amerika/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'amerika.jpg')),
     'z/21370/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'roadtrip.jpg'))
 }
@@ -87,6 +88,7 @@ def programs():
     add_item('Человек на карте', {'mode':'program', 'u':'person/episodes'}, icon=icon, fanart=fanarts['person/episodes'], isFolder=True)
     add_item('Смотри в оба', {'mode':'program', 'u':'smotrivoba/episodes'}, icon=icon, fanart=fanarts['smotrivoba/episodes'], isFolder=True)
     add_item('Ждём в гости', {'mode':'program', 'u':'welcome/episodes'}, icon=icon, fanart=fanarts['welcome/episodes'], isFolder=True)
+    add_item('Балтия', {'mode':'program', 'u':'baltia/episodes'}, icon=icon, fanart=fanarts['baltia/episodes'], isFolder=True)
     add_item('Азия', {'mode':'program', 'u':'asia/episodes'}, icon=icon, fanart=fanarts['asia/episodes'], isFolder=True)
     add_item('Америка', {'mode':'program', 'u':'amerika/episodes'}, icon=icon, fanart=fanarts['amerika/episodes'], isFolder=True)
     add_item('Америка. Большое путешествие', {'mode':'program', 'u':'z/21370/episodes'}, icon=icon, fanart=fanarts['z/21370/episodes'], isFolder=True)
