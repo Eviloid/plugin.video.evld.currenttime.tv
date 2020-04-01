@@ -168,14 +168,19 @@ def play_video(params):
     html = get_html(frame[0])
 
     data = re.compile('data-sources="(.+?)" data-lt-on-play="').findall(html)
-    data = json.loads(common.replaceHTMLCodes(data[0]))
+    if data:
+        data = json.loads(common.replaceHTMLCodes(data[0]))
 
-    for video in data:
-        if quality == video['DataInfo']:
-            purl = video['AmpSrc']
-            break
+        for video in data:
+            if quality == video['DataInfo']:
+                purl = video['AmpSrc']
+                break
+        else:
+            purl = data[-1]['AmpSrc']
     else:
-        purl = data[-1]['AmpSrc']
+        audio = common.parseDOM(html, 'audio', ret='src')
+        if audio:
+            purl = audio[0]
 
     item = xbmcgui.ListItem(path=purl)
 
