@@ -197,11 +197,14 @@ def search(params):
     if not keywords:
         kbd = xbmc.Keyboard('', 'Поиск:')
         kbd.doModal()
+        xbmcplugin.endOfDirectory(handle, cacheToDisc=False)
         if kbd.isConfirmed():
             keywords = kbd.getText()
             if keywords:
-                xbmcplugin.endOfDirectory(handle)
-                xbmc.executebuiltin('Container.Update("%s?mode=search&k=%s", "replace")' % (sys.argv[0], urllib.quote_plus(keywords)))
+                xbmc.executebuiltin('Container.Update(%s?mode=search&k=%s, replace)' % (sys.argv[0], urllib.quote_plus(keywords)))
+                return
+        xbmc.executebuiltin('Container.Update(%s, replace)' % sys.argv[0])
+
     else:
         html = get_html('%s/s' % BASE_URL, {'k':keywords, 'tab':'video', 'pi':page, 'r':'any', 'pp':20})
 
