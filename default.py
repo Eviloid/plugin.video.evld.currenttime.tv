@@ -130,13 +130,15 @@ def show_content(params):
 
     html = get_html('%s/%s/' % (BASE_URL, url), {'p':page})
 
-    container = common.parseDOM(html, 'div', attrs={'class':'media-block .*?'})
-    videos = common.parseDOM(container, 'a', attrs={'class':'img-wrap.*?'})
-    hrefs = common.parseDOM(container, 'a', attrs={'class':'img-wrap.*?'}, ret="href")
-    titles = common.parseDOM(container, 'a', attrs={'class':'img-wrap.*?'}, ret="title")
+    blocks = common.parseDOM(html, 'div', attrs={'class':'media-block .*?'})
 
-    for i, video in enumerate(videos):
-        img = common.parseDOM(video, 'img', ret='src')[0]
+    for block in blocks:
+        href = common.parseDOM(block, 'a', attrs={'class':'img-wrap.*?'}, ret="href")[0]
+        title = common.parseDOM(block, 'a', attrs={'class':'img-wrap.*?'}, ret="title")[0]
+        img = common.parseDOM(block, 'img', ret='src')[0]
+        date = common.parseDOM(block, 'span', attrs={'class':'date .*?'})
+
+        plot = date[0] if date else ''
 
         thumb = re.sub(r'_w\w+', '_w512_r1', img)
 
@@ -144,10 +146,9 @@ def show_content(params):
         if addon.getSetting('DownloadFanart') == 'true':
             fan = re.sub(r'_w\w+', '_w1920_r1', img)
 
-        title = common.replaceHTMLCodes(titles[i])
-        href = hrefs[i]
+        title = common.replaceHTMLCodes(title)
 
-        add_item(title, {'mode':'play', 'u':href}, thumb=thumb, fanart=fan, isPlayable=True)
+        add_item(title, {'mode':'play', 'u':href}, thumb=thumb, plot=plot, fanart=fan, isPlayable=True)
 
     if common.parseDOM(html, 'p', attrs={'class':'buttons btn--load-more'}):
         params['p'] = page + 1
