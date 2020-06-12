@@ -45,12 +45,18 @@ fanarts = {
     'asia/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'asia.jpg')),
     'baltia/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'baltia.jpg')),
     'amerika/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'amerika.jpg')),
-    'z/21370/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'roadtrip.jpg'))
+    'z/21370/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'roadtrip.jpg')),
+    'svoboda':xbmc.translatePath(os.path.join(Pdir, 'media', 'svoboda.jpg')),
+    'https://www.svoboda.org/thats-the-news/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'thats-the-news.jpg')),
+    'thats-the-news/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'thats-the-news.jpg')),
+    'https://www.svoboda.org/z/20327':xbmc.translatePath(os.path.join(Pdir, 'media', 'svoboda.jpg')),
+    'https://www.svoboda.org/z/959':xbmc.translatePath(os.path.join(Pdir, 'media', 'svoboda.jpg')),
 }
 
 icons = {
     'z/21701':xbmc.translatePath(os.path.join(Pdir, 'media', 'listen.jpg')),
-    'z/21950':xbmc.translatePath(os.path.join(Pdir, 'media', 'kgb.jpg'))
+    'z/21950':xbmc.translatePath(os.path.join(Pdir, 'media', 'kgb.jpg')),
+    'svoboda':xbmc.translatePath(os.path.join(Pdir, 'media', 'svoboda.png')),
 }
 
 xbmcplugin.setContent(handle, 'videos')
@@ -72,8 +78,10 @@ def main_menu():
     add_item('Эфиры', {'mode':'program', 'u':'z/17317'}, fanart=fanart, isFolder=True)
     add_item('Репортажи', {'mode':'program', 'u':'report/episodes'}, fanart=fanart, isFolder=True)
     add_item('Интервью', {'mode':'program', 'u':'interview/episodes'}, fanart=fanart, isFolder=True)
-    add_item('Все видео', {'mode':'program', 'u':'z/17192'}, fanart=fanart, isFolder=True)
+    add_item('Всё видео', {'mode':'program', 'u':'z/17192'}, fanart=fanart, isFolder=True)
     add_item('Подкасты', {'mode':'podcasts'}, fanart=fanart, isFolder=True)
+    if addon.getSetting('ShowRF') == 'true':
+        add_item('Радио Свобода', {'mode':'svoboda'}, fanart=fanarts['svoboda'], isFolder=True)
     add_item('Поиск', {'mode':'search'}, fanart=fanart, icon='DefaultAddonsSearch.png', isFolder=True)
     xbmcplugin.endOfDirectory(handle)
 
@@ -98,6 +106,12 @@ def programs():
 def podcasts():
     add_item('Послушайте! Олевский', {'mode':'program', 'u':'z/21701'}, icon=icons['z/21701'], fanart=fanart, plot='Слушайте подкасты Тимура Олевского. Журналист телеканала "Настоящее Время" ищет ответы на свои вопросы. "Я задумал этот подкаст для того, чтобы изучить и рассказать о том, что не идет у меня из головы", – говорит Олевский', isFolder=True)
     add_item('Архивы КГБ', {'mode':'program', 'u':'z/21950'}, icon=icons['z/21950'], fanart=fanart, plot='Подкаст "Архивы КГБ" — это истории, найденные киевским журналистом и историком Эдуардом Андрющенко в рассекреченных документах КГБ Украины.', isFolder=True)
+    xbmcplugin.endOfDirectory(handle)
+
+def svoboda():
+    add_item('Что происходит', {'mode':'program', 'u':'https://www.svoboda.org/z/20327'}, icon=icons['svoboda'], fanart=fanarts['svoboda'], isFolder=True)
+    add_item('Такие новости', {'mode':'program', 'u':'https://www.svoboda.org/thats-the-news/episodes'}, icon=icons['svoboda'], fanart=fanarts['thats-the-news/episodes'], isFolder=True)
+    add_item('Всё видео', {'mode':'program', 'u':'https://www.svoboda.org/z/959'}, icon=icons['svoboda'], fanart=fanarts['svoboda'], isFolder=True)
     xbmcplugin.endOfDirectory(handle)
 
 
@@ -126,15 +140,27 @@ def live():
 
 def show_content(params):
     page = int(params.get('p', 0))
-    url = params['u'] = urllib.unquote_plus(params['u'])
 
-    html = get_html('%s/%s/' % (BASE_URL, url), {'p':page})
+    url = urllib.unquote_plus(params['u'])
+    url = params['u'] = url if url[:4] == 'http' else '%s/%s/' % (BASE_URL, url)
 
-    blocks = common.parseDOM(html, 'div', attrs={'class':'media-block .*?'})
+    html = get_html(url, {'p':page})
+
+    container = common.parseDOM(html, 'ul', attrs={'id':'ordinaryItems'})
+    if not container:
+        container = common.parseDOM(html, 'div', attrs={'class':'media-block-wrap'})
+
+    blocks = common.parseDOM(container, 'div', attrs={'class':'media-block .*?'})
 
     for block in blocks:
-        href = common.parseDOM(block, 'a', attrs={'class':'img-wrap.*?'}, ret="href")[0]
-        title = common.parseDOM(block, 'a', attrs={'class':'img-wrap.*?'}, ret="title")[0]
+
+        href = common.parseDOM(block, 'a', attrs={'class':'img-wrap.*?'}, ret='href')
+        if not href:
+            continue
+
+        href = href[0]
+
+        title = common.parseDOM(block, 'a', attrs={'class':'img-wrap.*?'}, ret='title')[0]
         img = common.parseDOM(block, 'img', ret='src')[0]
         date = common.parseDOM(block, 'span', attrs={'class':'date .*?'})
 
@@ -162,15 +188,16 @@ def program(params):
 
 def play_video(params):
 
-    html = get_html('%s/%s' % (BASE_URL, urllib.unquote_plus(params['u'])))
+    url = urllib.unquote_plus(params['u'])
+    html = get_html(url if url[:4] == 'http' else '%s/%s/' % (BASE_URL, url))
 
     quality = addon.getSetting('VideoQuality')
 
-    frame = re.compile('<meta content="(.+?)" name="twitter:player"').findall(html)
+    frame = re.compile(r'<meta content="(.+?)" name="twitter:player"').findall(html)
 
     html = get_html(frame[0])
 
-    data = re.compile('data-sources="(.+?)" data-lt-on-play="').findall(html)
+    data = re.compile(r'data-sources="(.+?)" data-lt-on-play="').findall(html)
     if data:
         data = json.loads(common.replaceHTMLCodes(data[0]))
 
@@ -227,8 +254,7 @@ def search(params):
             add_item(title, {'mode':'play', 'u':href}, plot=plot, thumb=thumb, fanart=fanart, isPlayable=True)
 
         if common.parseDOM(html, 'span', attrs={'class':'ico ico-arrow-forward'}):
-            params['p'] = page + 1
-            params['k'] = keywords
+            params.update({'p':page + 1, 'k':keywords})
             add_item('Далее > %i' % (params['p']), params, fanart=fanart, isFolder=True)
 
         xbmcplugin.endOfDirectory(handle)
@@ -288,6 +314,9 @@ elif mode == 'programs':
 
 elif mode == 'podcasts':
     podcasts()
+
+elif mode == 'svoboda':
+    svoboda()
 
 elif mode == 'program':
     program(params)
