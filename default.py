@@ -20,7 +20,7 @@ stream_url = {
     '540p': 'http://rfe-lh.akamaihd.net/i/rfe_tvmc5@383630/index_0540_av-p.m3u8',
     '404p': 'http://rfe-lh.akamaihd.net/i/rfe_tvmc5@383630/index_0404_av-p.m3u8',
     '288p': 'http://rfe-lh.akamaihd.net/i/rfe_tvmc5@383630/index_0288_av-p.m3u8',
-    'rtmp': 'rtmp://cp107825.live.edgefcs.net/live/rfe_tvmc5@383651'
+    'rtmp': 'rtmp://cp107825.live.edgefcs.net/live/rfe_tvmc5@383651',
 }
 
 try:handle = int(sys.argv[1])
@@ -46,10 +46,6 @@ fanarts = {
     'baltia/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'baltia.jpg')),
     'amerika/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'amerika.jpg')),
     'z/21370/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'roadtrip.jpg')),
-    'svoboda':xbmc.translatePath(os.path.join(Pdir, 'media', 'svoboda.jpg')),
-    'https://www.svoboda.org/thats-the-news/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'thats-the-news.jpg')),
-    'thats-the-news/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'thats-the-news.jpg')),
-    'https://www.svoboda.org/z/20327':xbmc.translatePath(os.path.join(Pdir, 'media', 'svoboda.jpg')),
     'https://www.svoboda.org/z/959':xbmc.translatePath(os.path.join(Pdir, 'media', 'svoboda.jpg')),
 }
 
@@ -81,7 +77,7 @@ def main_menu():
     add_item('Всё видео', {'mode':'program', 'u':'z/17192'}, fanart=fanart, isFolder=True)
     add_item('Подкасты', {'mode':'podcasts'}, fanart=fanart, isFolder=True)
     if addon.getSetting('ShowRF') == 'true':
-        add_item('Радио Свобода', {'mode':'svoboda'}, fanart=fanarts['svoboda'], isFolder=True)
+        add_item('Радио Свобода', {'mode':'program', 'u':'https://www.svoboda.org/z/959'}, fanart=fanarts['https://www.svoboda.org/z/959'], isFolder=True)
     add_item('Поиск', {'mode':'search'}, fanart=fanart, icon='DefaultAddonsSearch.png', isFolder=True)
     xbmcplugin.endOfDirectory(handle)
 
@@ -106,12 +102,6 @@ def programs():
 def podcasts():
     add_item('Послушайте! Олевский', {'mode':'program', 'u':'z/21701'}, icon=icons['z/21701'], fanart=fanart, plot='Слушайте подкасты Тимура Олевского. Журналист телеканала "Настоящее Время" ищет ответы на свои вопросы. "Я задумал этот подкаст для того, чтобы изучить и рассказать о том, что не идет у меня из головы", – говорит Олевский', isFolder=True)
     add_item('Архивы КГБ', {'mode':'program', 'u':'z/21950'}, icon=icons['z/21950'], fanart=fanart, plot='Подкаст "Архивы КГБ" — это истории, найденные киевским журналистом и историком Эдуардом Андрющенко в рассекреченных документах КГБ Украины.', isFolder=True)
-    xbmcplugin.endOfDirectory(handle)
-
-def svoboda():
-    add_item('Что происходит', {'mode':'program', 'u':'https://www.svoboda.org/z/20327'}, icon=icons['svoboda'], fanart=fanarts['svoboda'], isFolder=True)
-    add_item('Такие новости', {'mode':'program', 'u':'https://www.svoboda.org/thats-the-news/episodes'}, icon=icons['svoboda'], fanart=fanarts['thats-the-news/episodes'], isFolder=True)
-    add_item('Всё видео', {'mode':'program', 'u':'https://www.svoboda.org/z/959'}, icon=icons['svoboda'], fanart=fanarts['svoboda'], isFolder=True)
     xbmcplugin.endOfDirectory(handle)
 
 
@@ -141,14 +131,10 @@ def live():
 def show_content(params):
     page = int(params.get('p', 0))
 
-    url = urllib.unquote_plus(params['u'])
-    url = params['u'] = url if url[:4] == 'http' else '%s/%s/' % (BASE_URL, url)
+    url = params['u'] = urllib.unquote_plus(params['u'])
+    html = get_html(url if url[:4] == 'http' else '%s/%s/' % (BASE_URL, url), {'p':page})
 
-    html = get_html(url, {'p':page})
-
-    container = common.parseDOM(html, 'ul', attrs={'id':'ordinaryItems'})
-    if not container:
-        container = common.parseDOM(html, 'div', attrs={'class':'media-block-wrap'})
+    container = common.parseDOM(html, 'div', attrs={'class':'media-block-wrap'})
 
     blocks = common.parseDOM(container, 'div', attrs={'class':'media-block .*?'})
 
@@ -178,7 +164,8 @@ def show_content(params):
 
     if common.parseDOM(html, 'p', attrs={'class':'buttons btn--load-more'}):
         params['p'] = page + 1
-        add_item('Далее > %i' % (1 + params['p']), params, fanart=fanart, isFolder=True)
+        fan = fanarts.get(url, fanart)
+        add_item('Далее > %i' % (1 + params['p']), params, fanart=fan, isFolder=True)
 
 
 def program(params):
@@ -187,7 +174,6 @@ def program(params):
 
 
 def play_video(params):
-
     url = urllib.unquote_plus(params['u'])
     html = get_html(url if url[:4] == 'http' else '%s/%s/' % (BASE_URL, url))
 
@@ -315,9 +301,6 @@ elif mode == 'programs':
 elif mode == 'podcasts':
     podcasts()
 
-elif mode == 'svoboda':
-    svoboda()
-
 elif mode == 'program':
     program(params)
 
@@ -330,3 +313,4 @@ elif mode == 'search':
 elif mode == 'cleancache':
     from tccleaner import TextureCacheCleaner as tcc
     tcc().remove_like('%currenttime.tv%', True)
+    tcc().remove_like('%rferl.org%', True)
