@@ -139,7 +139,6 @@ def show_content(params):
     blocks = common.parseDOM(container, 'div', attrs={'class':'media-block .*?'})
 
     for block in blocks:
-
         href = common.parseDOM(block, 'a', attrs={'class':'img-wrap.*?'}, ret='href')
         if not href:
             continue
@@ -247,8 +246,6 @@ def search(params):
 
 
 def add_item(title, params={}, icon='', banner='', fanart='', poster='', thumb='', plot='', isFolder=False, isPlayable=False, url=None):
-    if url is None: url = '%s?%s' % (sys.argv[0], urllib.urlencode(params))
-
     item = xbmcgui.ListItem(title, iconImage = icon, thumbnailImage = thumb)
     item.setInfo(type='Video', infoLabels={'title': title, 'plot': plot})
 
@@ -265,27 +262,14 @@ def add_item(title, params={}, icon='', banner='', fanart='', poster='', thumb='
     if thumb != '':
         item.setArt({'thumb': thumb})
 
+    if url is None:
+        url = '%s?%s' % (sys.argv[0], urllib.urlencode(params))
+        item.setContentLookup(False)
+
     xbmcplugin.addDirectoryItem(handle, url=url, listitem=item, isFolder=isFolder)
 
 
-def get_params():
-    param = {}
-    paramstring = sys.argv[2]
-    if len(paramstring) >= 2:
-        params = sys.argv[2]
-        cleanedparams = params.replace('?', '')
-        if (params[len(params) - 1] == '/'):
-            params = params[0:len(params) - 2]
-        pairsofparams = cleanedparams.split('&')
-        for i in range(len(pairsofparams)):
-            splitparams = {}
-            splitparams = pairsofparams[i].split('=')
-            if (len(splitparams)) == 2:
-                param[splitparams[0]] = splitparams[1]
-    return param
-
-
-params = get_params()
+params = common.getParameters(sys.argv[2])
 
 mode = params.get('mode', '')
 
