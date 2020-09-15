@@ -14,7 +14,7 @@ BASE_URL = "https://www.currenttime.tv"
 
 stream_url = {
     'Auto (hls)': 'http://rfe-lh.akamaihd.net/i/rfe_tvmc5@383630/master.m3u8',
-    'Auto (mpd)': 'https://rfeingest-i.akamaihd.net/dash/live/677329-b/DASH_RFE-TVMC5/manifest.mpd',
+    'Auto (mpd)': 'https://rfeingest-i.akamaihd.net/dash/live/677329/DASH_RFE-TVMC5/manifest.mpd',
     '1080p':'http://rfe-lh.akamaihd.net/i/rfe_tvmc5@383630/index_1080_av-p.m3u8',
     '720p': 'http://rfe-lh.akamaihd.net/i/rfe_tvmc5@383630/index_0720_av-p.m3u8',
     '540p': 'http://rfe-lh.akamaihd.net/i/rfe_tvmc5@383630/index_0540_av-p.m3u8',
