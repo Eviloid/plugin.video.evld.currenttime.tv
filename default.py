@@ -62,7 +62,13 @@ xbmcplugin.setContent(handle, 'videos')
 def get_html(url, params={}, noerror=True):
     headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0'}
 
-    conn = urllib2.urlopen(urllib2.Request('%s?%s' % (url, urllib.urlencode(params)), headers=headers))
+    if params:
+        req = urllib2.Request('%s?%s' % (url, urllib.urlencode(params)), headers=headers)
+    else:
+        req = urllib2.Request(url, headers=headers)
+
+    conn = urllib2.urlopen(req)
+
     html = conn.read()
     conn.close()
 
@@ -168,8 +174,9 @@ def show_content(params):
 
         title = common.replaceHTMLCodes(title)
 
-        params.update({'mode':'play', 'u':href})
-        add_item(title, params, thumb=thumb, plot=plot, fanart=fan, isPlayable=True)
+        item_params = params.copy()
+        item_params.update({'mode':'play', 'u':href})
+        add_item(title, item_params, thumb=thumb, plot=plot, fanart=fan, isPlayable=True)
 
     if common.parseDOM(html, 'p', attrs={'class':'buttons btn--load-more'}):
         params['p'] = page + 1
