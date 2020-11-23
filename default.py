@@ -47,12 +47,14 @@ fanarts = {
     'amerika/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'amerika.jpg')),
     'z/21370/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'roadtrip.jpg')),
     'https://www.svoboda.org/z/959':xbmc.translatePath(os.path.join(Pdir, 'media', 'svoboda.jpg')),
+    'https://www.golosameriki.com/z/5943':xbmc.translatePath(os.path.join(Pdir, 'media', 'voa.jpg')),
 }
 
 icons = {
     'z/21701':xbmc.translatePath(os.path.join(Pdir, 'media', 'listen.jpg')),
     'z/21950':xbmc.translatePath(os.path.join(Pdir, 'media', 'kgb.jpg')),
     'svoboda':xbmc.translatePath(os.path.join(Pdir, 'media', 'svoboda.png')),
+    'z/5943':xbmc.translatePath(os.path.join(Pdir, 'media', 'president.jpg')),
 }
 
 xbmcplugin.setContent(handle, 'videos')
@@ -77,7 +79,7 @@ def main_menu():
     add_item('Всё видео', {'mode':'program', 'u':'z/17192'}, fanart=fanart, isFolder=True)
     add_item('Подкасты', {'mode':'podcasts'}, fanart=fanart, isFolder=True)
     if addon.getSetting('ShowRF') == 'true':
-        add_item('Радио Свобода', {'mode':'program', 'u':'https://www.svoboda.org/z/959'}, fanart=fanarts['https://www.svoboda.org/z/959'], isFolder=True)
+        add_item('Радио Свобода', {'mode':'program', 'u':'https://www.svoboda.org/z/959', 'b':'https://www.svoboda.org'}, fanart=fanarts['https://www.svoboda.org/z/959'], isFolder=True)
     add_item('Поиск', {'mode':'search'}, fanart=fanart, icon='DefaultAddonsSearch.png', isFolder=True)
     xbmcplugin.endOfDirectory(handle)
 
@@ -102,6 +104,8 @@ def programs():
 def podcasts():
     add_item('Послушайте! Олевский', {'mode':'program', 'u':'z/21701'}, icon=icons['z/21701'], fanart=fanart, plot='Слушайте подкасты Тимура Олевского. Журналист телеканала "Настоящее Время" ищет ответы на свои вопросы. "Я задумал этот подкаст для того, чтобы изучить и рассказать о том, что не идет у меня из головы", – говорит Олевский', isFolder=True)
     add_item('Архивы КГБ', {'mode':'program', 'u':'z/21950'}, icon=icons['z/21950'], fanart=fanart, plot='Подкаст "Архивы КГБ" — это истории, найденные киевским журналистом и историком Эдуардом Андрющенко в рассекреченных документах КГБ Украины.', isFolder=True)
+    if addon.getSetting('ShowVOA') == 'true':
+        add_item('Президентские истории', {'mode':'program', 'u':'https://www.golosameriki.com/z/5943', 'b':'https://www.golosameriki.com'}, icon=icons['z/5943'], fanart=fanarts['https://www.golosameriki.com/z/5943'], plot='Истории о людях, управлявших и управляющих Соединенными Штатами Америки', isFolder=True)
     xbmcplugin.endOfDirectory(handle)
 
 
@@ -131,8 +135,11 @@ def live():
 def show_content(params):
     page = int(params.get('p', 0))
 
-    url = params['u'] = urllib.unquote_plus(params['u'])
-    html = get_html(url if url[:4] == 'http' else '%s/%s/' % (BASE_URL, url), {'p':page})
+    url = params['u'] = urllib.unquote_plus(params['u']).lstrip('/')
+
+    base = params.get('b', BASE_URL)
+
+    html = get_html(url if url[:4] == 'http' else '%s/%s' % (base, url), {'p':page})
 
     container = common.parseDOM(html, 'div', attrs={'class':'media-block-wrap'})
     if url != 'p/7363.html':
@@ -161,7 +168,8 @@ def show_content(params):
 
         title = common.replaceHTMLCodes(title)
 
-        add_item(title, {'mode':'play', 'u':href}, thumb=thumb, plot=plot, fanart=fan, isPlayable=True)
+        params.update({'mode':'play', 'u':href})
+        add_item(title, params, thumb=thumb, plot=plot, fanart=fan, isPlayable=True)
 
     if common.parseDOM(html, 'p', attrs={'class':'buttons btn--load-more'}):
         params['p'] = page + 1
@@ -175,8 +183,10 @@ def program(params):
 
 
 def play_video(params):
-    url = urllib.unquote_plus(params['u'])
-    html = get_html(url if url[:4] == 'http' else '%s/%s/' % (BASE_URL, url))
+    url = urllib.unquote_plus(params['u']).lstrip('/')
+    base = params.get('b', BASE_URL)
+
+    html = get_html(url if url[:4] == 'http' else '%s/%s' % (base, url))
 
     quality = addon.getSetting('VideoQuality')
 
@@ -300,3 +310,4 @@ elif mode == 'cleancache':
     from tccleaner import TextureCacheCleaner as tcc
     tcc().remove_like('%currenttime.tv%', True)
     tcc().remove_like('%rferl.org%', True)
+    tcc().remove_like('%voanews.com%', True)

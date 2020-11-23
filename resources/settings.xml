@@ -6,6 +6,7 @@
     </category>
     <category label="Программы">
         <setting id="ShowRF" label= "Показывать видео Радио Свободы" type="bool" default="false" visible="true"/>
+        <setting id="ShowVOA" label= "Показывать подкасты Голоса Америки" type="bool" default="false" visible="true"/>
     </category>
     <category label="Разное">
         <setting id="DownloadFanart" label= "Загружать фанарты" type="bool" default="false" visible="true"/>
