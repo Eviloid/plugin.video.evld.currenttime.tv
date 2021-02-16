@@ -45,6 +45,7 @@ fanarts = {
     'asia/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'asia.jpg')),
     'baltia/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'baltia.jpg')),
     'amerika/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'amerika.jpg')),
+    'priznaki/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'priznaki.jpg')),
     'z/21370/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'roadtrip.jpg')),
     'https://www.svoboda.org/z/959':xbmc.translatePath(os.path.join(Pdir, 'media', 'svoboda.jpg')),
     'https://www.svoboda.org/music/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'svoboda.jpg')),
@@ -102,6 +103,7 @@ def programs():
     add_item('Человек на карте', {'mode':'program', 'u':'person/episodes'}, icon=icon, fanart=fanarts['person/episodes'], isFolder=True)
     add_item('Смотри в оба', {'mode':'program', 'u':'smotrivoba/episodes'}, icon=icon, fanart=fanarts['smotrivoba/episodes'], isFolder=True)
     add_item('Ждём в гости', {'mode':'program', 'u':'welcome/episodes'}, icon=icon, fanart=fanarts['welcome/episodes'], isFolder=True)
+    add_item('Признаки жизни', {'mode':'program', 'u':'priznaki/episodes'}, icon=icon, fanart=fanarts['priznaki/episodes'], isFolder=True)
     add_item('Балтия', {'mode':'program', 'u':'baltia/episodes'}, icon=icon, fanart=fanarts['baltia/episodes'], isFolder=True)
     add_item('Азия', {'mode':'program', 'u':'asia/episodes'}, icon=icon, fanart=fanarts['asia/episodes'], isFolder=True)
     add_item('Америка', {'mode':'program', 'u':'amerika/episodes'}, icon=icon, fanart=fanarts['amerika/episodes'], isFolder=True)
