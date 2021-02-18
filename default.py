@@ -14,12 +14,7 @@ BASE_URL = "https://www.currenttime.tv"
 
 stream_url = {
     'Auto (hls)': 'http://rfe-lh.akamaihd.net/i/rfe_tvmc5@383630/master.m3u8',
-    'Auto (mpd)': 'https://rfeingest-i.akamaihd.net/dash/live/677329/DASH_RFE-TVMC5/manifest.mpd',
-    '1080p':'http://rfe-lh.akamaihd.net/i/rfe_tvmc5@383630/index_1080_av-p.m3u8',
-    '720p': 'http://rfe-lh.akamaihd.net/i/rfe_tvmc5@383630/index_0720_av-p.m3u8',
-    '540p': 'http://rfe-lh.akamaihd.net/i/rfe_tvmc5@383630/index_0540_av-p.m3u8',
-    '404p': 'http://rfe-lh.akamaihd.net/i/rfe_tvmc5@383630/index_0404_av-p.m3u8',
-    '288p': 'http://rfe-lh.akamaihd.net/i/rfe_tvmc5@383630/index_0288_av-p.m3u8',
+    'Auto (mpd)': 'https://rfeingest-i.akamaihd.net/dash/live/677329-b/DASH_RFE-TVMC5/manifest.mpd',
     'rtmp': 'rtmp://cp107825.live.edgefcs.net/live/rfe_tvmc5@383651',
 }
 
@@ -66,9 +61,9 @@ def get_html(url, params={}, noerror=True):
     headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0'}
 
     if params:
-        req = urllib2.Request('%s?%s' % (url, urllib.urlencode(params)), headers=headers)
-    else:
-        req = urllib2.Request(url, headers=headers)
+        url = '%s?%s' % (url, urllib.urlencode(params))
+    
+    req = urllib2.Request(url, headers=headers)
 
     conn = urllib2.urlopen(req)
 
@@ -124,23 +119,31 @@ def podcasts():
 def live():
     quality = addon.getSetting('LiveQuality')
 
-    purl = stream_url[quality]
-    item = xbmcgui.ListItem(path=purl)
+    purl = stream_url.get(quality, stream_url['Auto (hls)'])
+
+    item = xbmcgui.ListItem()
     item.setInfo(type='video', infoLabels={'title':'Live'})
 
-    if quality[:4] == 'Auto':
+    if '.m3u8' in purl:
         item.setProperty('inputstreamaddon', 'inputstream.adaptive')
+        item.setProperty('inputstream.adaptive.manifest_type', 'hls')
 
-        if '.mpd' in purl:
-            item.setProperty('inputstream.adaptive.manifest_type', 'mpd')
-            item.setProperty('inputstream.adaptive.license_type', 'com.widevine.alpha')
-            item.setProperty('inputstream.adaptive.license_key', 'https://cwip-shaka-proxy.appspot.com/no_auth||R{SSM}|')
+        if quality[:4] != 'Auto':
+            m3u8 = get_html(purl)
+            streams = re.findall(r'x(\d+).*?(http.*?)$', m3u8, flags=re.MULTILINE | re.DOTALL)
+            stream = [s[1] for s in streams if '{}p'.format(s[0]) == quality]
+            if stream:
+                purl = stream[0]
+
+    elif '.mpd' in purl:
+        item.setProperty('inputstream.adaptive.manifest_type', 'mpd')
+        item.setProperty('inputstream.adaptive.license_type', 'com.widevine.alpha')
+        item.setProperty('inputstream.adaptive.license_key', 'https://cwip-shaka-proxy.appspot.com/no_auth||R{SSM}|')
         
-            item.setMimeType('application/dash+xml')
-            item.setContentLookup(False)
-        else:
-            item.setProperty('inputstream.adaptive.manifest_type', 'hls')
+        item.setMimeType('application/dash+xml')
+        item.setContentLookup(False)
 
+    item.setPath(purl)
     xbmcplugin.setResolvedUrl(handle, True, item)
 
 
@@ -210,9 +213,8 @@ def play_video(params):
     data = re.compile(r'data-sources="(.+?)" data-lt-on-play="').findall(html)
     if data:
         data = json.loads(common.replaceHTMLCodes(data[0]))
-
         for video in data:
-            if quality == video['DataInfo']:
+            if quality == video['DataInfo'].replace('270', '240'):
                 purl = video['AmpSrc']
                 break
         else:

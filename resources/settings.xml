@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
     <category label="Просмотр">
-        <setting id="LiveQuality" label= "Качество прямого эфира" type="select" default="Auto (hls)" values="Auto (hls)|Auto (mpd)|1080p|720p|540p|404p|288p|rtmp" visible="true"/>
-        <setting id="VideoQuality" label= "Качество видео" type="select" default="720p" values="1080p|720p|360p|270p" visible="true"/>
+        <setting id="LiveQuality" label= "Качество прямого эфира" type="select" default="Auto (hls)" values="Auto (hls)|Auto (mpd)|1080p|720p|480p|360p|240p|rtmp" visible="true"/>
+        <setting id="VideoQuality" label= "Качество видео" type="select" default="720p" values="1080p|720p|360p|240p" visible="true"/>
     </category>
     <category label="Программы">
         <setting id="ShowRF" label= "Показывать видео и подкасты Радио Свободы" type="bool" default="false" visible="true"/>
