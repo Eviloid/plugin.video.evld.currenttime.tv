@@ -269,6 +269,7 @@ def search(params):
             params.update({'p':page + 1, 'k':keywords})
             add_item('Далее > %i' % (params['p']), params, fanart=fanart, isFolder=True)
 
+        xbmcplugin.setPluginCategory(handle, 'Search')
         xbmcplugin.endOfDirectory(handle)
 
 
