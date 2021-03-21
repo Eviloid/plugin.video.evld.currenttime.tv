@@ -41,6 +41,7 @@ fanarts = {
     'baltia/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'baltia.jpg')),
     'amerika/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'amerika.jpg')),
     'priznaki/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'priznaki.jpg')),
+    'utro/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'utro.jpg')),
     'z/21370/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'roadtrip.jpg')),
     'https://www.svoboda.org/z/959':xbmc.translatePath(os.path.join(Pdir, 'media', 'svoboda.jpg')),
     'https://www.svoboda.org/music/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'svoboda.jpg')),
@@ -91,12 +92,12 @@ def main_menu():
 
 
 def programs():
-    add_item('Вечер', {'mode':'program', 'u':'vecher/episodes'}, icon=icon, fanart=fanarts['vecher/episodes'], isFolder=True)
     add_item('Главное', {'mode':'program', 'u':'glavnoe/episodes'}, icon=icon, fanart=fanarts['glavnoe/episodes'], isFolder=True)
+    add_item('Утро', {'mode':'program', 'u':'utro/episodes'}, icon=icon, fanart=fanarts['utro/episodes'], isFolder=True)
+    add_item('Вечер', {'mode':'program', 'u':'vecher/episodes'}, icon=icon, fanart=fanarts['vecher/episodes'], isFolder=True)
     add_item('Реальное кино', {'mode':'program', 'u':'doc/episodes'}, icon=icon, fanart=fanarts['doc/episodes'], isFolder=True)
     add_item('Настоящий сериал', {'mode':'program', 'u':'series/episodes'}, icon=icon, fanart=fanarts['series/episodes'], isFolder=True)
     add_item('Неизвестная Россия', {'mode':'program', 'u':'unknownrussia/episodes'}, icon=icon, fanart=fanarts['unknownrussia/episodes'], isFolder=True)
-    add_item('Неизвестная Беларусь', {'mode':'program', 'u':'unknownbelarus/episodes'}, icon=icon, fanart=fanarts['unknownbelarus/episodes'], isFolder=True)
     add_item('Человек на карте', {'mode':'program', 'u':'person/episodes'}, icon=icon, fanart=fanarts['person/episodes'], isFolder=True)
     add_item('Смотри в оба', {'mode':'program', 'u':'smotrivoba/episodes'}, icon=icon, fanart=fanarts['smotrivoba/episodes'], isFolder=True)
     add_item('Ждём в гости', {'mode':'program', 'u':'welcome/episodes'}, icon=icon, fanart=fanarts['welcome/episodes'], isFolder=True)
@@ -105,6 +106,7 @@ def programs():
     add_item('Азия', {'mode':'program', 'u':'asia/episodes'}, icon=icon, fanart=fanarts['asia/episodes'], isFolder=True)
     add_item('Америка', {'mode':'program', 'u':'amerika/episodes'}, icon=icon, fanart=fanarts['amerika/episodes'], isFolder=True)
     add_item('Америка. Большое путешествие', {'mode':'program', 'u':'z/21370/episodes'}, icon=icon, fanart=fanarts['z/21370/episodes'], isFolder=True)
+    add_item('Неизвестная Беларусь', {'mode':'program', 'u':'unknownbelarus/episodes'}, icon=icon, fanart=fanarts['unknownbelarus/episodes'], isFolder=True)
     xbmcplugin.endOfDirectory(handle)
 
 
