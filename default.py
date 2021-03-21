@@ -157,7 +157,7 @@ def show_content(params):
     html = get_html(url if url[:4] == 'http' else '%s/%s' % (base, url), {'p':page})
 
     container = common.parseDOM(html, 'div', attrs={'class':'media-block-wrap'})
-    if url != 'p/7363.html':
+    if container:
         container = container[0]
 
     blocks = common.parseDOM(container, 'div', attrs={'class':'media-block .*?'})
@@ -170,18 +170,17 @@ def show_content(params):
         href = href[0]
 
         title = common.parseDOM(block, 'a', attrs={'class':'img-wrap.*?'}, ret='title')[0]
+        title = common.replaceHTMLCodes(title)
         img = common.parseDOM(block, 'img', ret='src')[0]
         date = common.parseDOM(block, 'span', attrs={'class':'date .*?'})
 
-        plot = date[0] if date else ''
+        plot = '[B]%s[/B]\n\n%s' % (date[0] if date else '', title)
 
         thumb = re.sub(r'_w\w+', '_w512_r1', img)
 
         fan = fanarts.get(url, fanart)
         if addon.getSetting('DownloadFanart') == 'true':
             fan = re.sub(r'_w\w+', '_w1920_r1', img)
-
-        title = common.replaceHTMLCodes(title)
 
         item_params = params.copy()
         item_params.update({'mode':'play', 'u':href})
