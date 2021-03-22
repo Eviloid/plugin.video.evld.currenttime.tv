@@ -50,6 +50,7 @@ fanarts = {
     'https://www.svoboda.org/z/959':xt(os.path.join(Pdir, 'media', 'svoboda.jpg')),
     'https://www.svoboda.org/music/episodes':xt(os.path.join(Pdir, 'media', 'svoboda.jpg')),
     'https://www.golosameriki.com/z/5943':xt(os.path.join(Pdir, 'media', 'voa.jpg')),
+    'https://www.golosameriki.com/z/5944':xt(os.path.join(Pdir, 'media', 'voa.jpg')),
 }
 
 icons = {
@@ -57,6 +58,7 @@ icons = {
     'z/21950':xt(os.path.join(Pdir, 'media', 'kgb.jpg')),
     'svoboda':xt(os.path.join(Pdir, 'media', 'svoboda.png')),
     'z/5943':xt(os.path.join(Pdir, 'media', 'president.jpg')),
+    'z/5944':xt(os.path.join(Pdir, 'media', 'talk.jpg')),
     'music/episodes':xt(os.path.join(Pdir, 'media', 'music.jpg')),
 }
 
@@ -117,6 +119,7 @@ def podcasts():
     add_item('Архивы КГБ', {'mode':'program', 'u':'z/21950'}, icon=icons['z/21950'], fanart=fanart, plot='Подкаст "Архивы КГБ" — это истории, найденные киевским журналистом и историком Эдуардом Андрющенко в рассекреченных документах КГБ Украины.', isFolder=True)
     if addon.getSetting('ShowVOA') == 'true':
         add_item('Президентские истории', {'mode':'program', 'u':'https://www.golosameriki.com/z/5943', 'b':'https://www.golosameriki.com'}, icon=icons['z/5943'], fanart=fanarts['https://www.golosameriki.com/z/5943'], plot='Истории о людях, управлявших и управляющих Соединенными Штатами Америки', isFolder=True)
+        add_item('Знаем Talk', {'mode':'program', 'u':'https://www.golosameriki.com/z/5944', 'b':'https://www.golosameriki.com'}, icon=icons['z/5944'], fanart=fanarts['https://www.golosameriki.com/z/5944'], plot='Знаем Talk – это еженедельный подкаст о языке, на котором мы говорим, и о языках, которые нас окружают', isFolder=True)
     if addon.getSetting('ShowRF') == 'true':
         add_item('Музыка на "Свободе"', {'mode':'program', 'u':'https://www.svoboda.org/music/episodes', 'b':'https://www.svoboda.org'}, icon=icons['music/episodes'], fanart=fanarts['https://www.svoboda.org/music/episodes'], plot='Артемий Троицкий, музыкальный критик и активист широкого профиля, представляет в своём подкасте и его радиоверсии талантливую новую музыку самых разных стилей и направлений.', isFolder=True)
     xbmcplugin.endOfDirectory(handle)
