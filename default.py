@@ -162,7 +162,8 @@ def show_content(params):
     html = get_html(url if url[:4] == 'http' else '%s/%s' % (base, url), {'p':page})
 
     container = common.parseDOM(html, 'div', attrs={'class':'media-block-wrap'})
-    if container:
+
+    if url != 'p/7363.html':
         container = container[0]
 
     blocks = common.parseDOM(container, 'div', attrs={'class':'media-block .*?'})
