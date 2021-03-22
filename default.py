@@ -172,7 +172,7 @@ def show_content(params):
 
     container = common.parseDOM(html, 'div', attrs={'class':'media-block-wrap'})
 
-    if container:
+    if url != 'p/7363.html':
         container = container[0]
 
     blocks = common.parseDOM(container, 'div', attrs={'class':'media-block .*?'})
