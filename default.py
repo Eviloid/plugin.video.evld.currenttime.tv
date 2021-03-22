@@ -45,6 +45,7 @@ fanarts = {
     'baltia/episodes':xt(os.path.join(Pdir, 'media', 'baltia.jpg')),
     'amerika/episodes':xt(os.path.join(Pdir, 'media', 'amerika.jpg')),
     'priznaki/episodes':xt(os.path.join(Pdir, 'media', 'priznaki.jpg')),
+    'utro/episodes':xt(os.path.join(Pdir, 'media', 'utro.jpg')),
     'z/21370/episodes':xt(os.path.join(Pdir, 'media', 'roadtrip.jpg')),
     'https://www.svoboda.org/z/959':xt(os.path.join(Pdir, 'media', 'svoboda.jpg')),
     'https://www.svoboda.org/music/episodes':xt(os.path.join(Pdir, 'media', 'svoboda.jpg')),
@@ -93,8 +94,9 @@ def main_menu():
 
 
 def programs():
-    add_item('Вечер', {'mode':'program', 'u':'vecher/episodes'}, icon=icon, fanart=fanarts['vecher/episodes'], isFolder=True)
     add_item('Главное', {'mode':'program', 'u':'glavnoe/episodes'}, icon=icon, fanart=fanarts['glavnoe/episodes'], isFolder=True)
+    add_item('Утро', {'mode':'program', 'u':'utro/episodes'}, icon=icon, fanart=fanarts['utro/episodes'], isFolder=True)
+    add_item('Вечер', {'mode':'program', 'u':'vecher/episodes'}, icon=icon, fanart=fanarts['vecher/episodes'], isFolder=True)
     add_item('Реальное кино', {'mode':'program', 'u':'doc/episodes'}, icon=icon, fanart=fanarts['doc/episodes'], isFolder=True)
     add_item('Настоящий сериал', {'mode':'program', 'u':'series/episodes'}, icon=icon, fanart=fanarts['series/episodes'], isFolder=True)
     add_item('Неизвестная Россия', {'mode':'program', 'u':'unknownrussia/episodes'}, icon=icon, fanart=fanarts['unknownrussia/episodes'], isFolder=True)
@@ -167,7 +169,7 @@ def show_content(params):
 
     container = common.parseDOM(html, 'div', attrs={'class':'media-block-wrap'})
 
-    if url != 'p/7363.html':
+    if container:
         container = container[0]
 
     blocks = common.parseDOM(container, 'div', attrs={'class':'media-block .*?'})
