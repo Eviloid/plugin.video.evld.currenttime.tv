@@ -218,7 +218,7 @@ def play_video(params):
     url = urllib.parse.unquote_plus(params['u']).lstrip('/')
     base = urllib.parse.unquote_plus(params.get('b', BASE_URL))
 
-    html = get_html(url if url[:4] == 'http' else '%s/%s' % (base, url))
+    html = get_html(url if url[:4] == 'http' else '%s/%s' % (base, urllib.parse.quote(url)))
 
     quality = addon.getSetting('VideoQuality')
 
