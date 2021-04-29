@@ -1,5 +1,5 @@
-#!/usr/bin/python
 # -*- coding: utf-8 -*-
+
 import os, urllib, sys, urllib2, re, json
 import xbmc, xbmcgui, xbmcplugin, xbmcaddon
 import CommonFunctions
@@ -21,41 +21,43 @@ stream_url = {
 try:handle = int(sys.argv[1])
 except:pass
 
+def xt(x): return xbmc.translatePath(x)
+
 addon = xbmcaddon.Addon(id='plugin.video.evld.currenttime.tv')
 
 Pdir = addon.getAddonInfo('path')
-icon = xbmc.translatePath(os.path.join(Pdir, 'icon.png'))
-fanart = xbmc.translatePath(os.path.join(Pdir, 'fanart.jpg'))
+icon = xt(os.path.join(Pdir, 'icon.png'))
+fanart = xt(os.path.join(Pdir, 'fanart.jpg'))
 
 fanarts = {
-    'vecher/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'vecher.jpg')),
-    'glavnoe/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'glavnoe.jpg')),
-    'doc/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'doc.jpg')),
-    'unknownrussia/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'unknownrussia.jpg')),
-    'unknownbelarus/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'unknownbelarus.jpg')),
-    'person/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'person.jpg')),
-    'series/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'series.jpg')),
-    'smotrivoba/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'smotrivoba.jpg')),
-    'welcome/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'welcome.jpg')),
-    'asia/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'asia.jpg')),
-    'baltia/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'baltia.jpg')),
-    'amerika/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'amerika.jpg')),
-    'priznaki/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'priznaki.jpg')),
-    'utro/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'utro.jpg')),
-    'z/21370/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'roadtrip.jpg')),
-    'https://www.svoboda.org/z/959':xbmc.translatePath(os.path.join(Pdir, 'media', 'svoboda.jpg')),
-    'https://www.svoboda.org/music/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'svoboda.jpg')),
-    'https://www.golosameriki.com/z/5943':xbmc.translatePath(os.path.join(Pdir, 'media', 'voa.jpg')),
-    'https://www.golosameriki.com/z/5944':xbmc.translatePath(os.path.join(Pdir, 'media', 'voa.jpg')),
+    'vecher/episodes':xt(os.path.join(Pdir, 'media', 'vecher.jpg')),
+    'glavnoe/episodes':xt(os.path.join(Pdir, 'media', 'glavnoe.jpg')),
+    'doc/episodes':xt(os.path.join(Pdir, 'media', 'doc.jpg')),
+    'unknownrussia/episodes':xt(os.path.join(Pdir, 'media', 'unknownrussia.jpg')),
+    'unknownbelarus/episodes':xt(os.path.join(Pdir, 'media', 'unknownbelarus.jpg')),
+    'person/episodes':xt(os.path.join(Pdir, 'media', 'person.jpg')),
+    'series/episodes':xt(os.path.join(Pdir, 'media', 'series.jpg')),
+    'smotrivoba/episodes':xt(os.path.join(Pdir, 'media', 'smotrivoba.jpg')),
+    'welcome/episodes':xt(os.path.join(Pdir, 'media', 'welcome.jpg')),
+    'asia/episodes':xt(os.path.join(Pdir, 'media', 'asia.jpg')),
+    'baltia/episodes':xt(os.path.join(Pdir, 'media', 'baltia.jpg')),
+    'amerika/episodes':xt(os.path.join(Pdir, 'media', 'amerika.jpg')),
+    'priznaki/episodes':xt(os.path.join(Pdir, 'media', 'priznaki.jpg')),
+    'utro/episodes':xt(os.path.join(Pdir, 'media', 'utro.jpg')),
+    'z/21370/episodes':xt(os.path.join(Pdir, 'media', 'roadtrip.jpg')),
+    'https://www.svoboda.org/z/959':xt(os.path.join(Pdir, 'media', 'svoboda.jpg')),
+    'https://www.svoboda.org/music/episodes':xt(os.path.join(Pdir, 'media', 'svoboda.jpg')),
+    'https://www.golosameriki.com/z/5943':xt(os.path.join(Pdir, 'media', 'voa.jpg')),
+    'https://www.golosameriki.com/z/5944':xt(os.path.join(Pdir, 'media', 'voa.jpg')),
 }
 
 icons = {
-    'z/21701':xbmc.translatePath(os.path.join(Pdir, 'media', 'listen.jpg')),
-    'z/21950':xbmc.translatePath(os.path.join(Pdir, 'media', 'kgb.jpg')),
-    'svoboda':xbmc.translatePath(os.path.join(Pdir, 'media', 'svoboda.png')),
-    'z/5943':xbmc.translatePath(os.path.join(Pdir, 'media', 'president.jpg')),
-    'z/5944':xbmc.translatePath(os.path.join(Pdir, 'media', 'talk.jpg')),
-    'music/episodes':xbmc.translatePath(os.path.join(Pdir, 'media', 'music.jpg')),
+    'z/21701':xt(os.path.join(Pdir, 'media', 'listen.jpg')),
+    'z/21950':xt(os.path.join(Pdir, 'media', 'kgb.jpg')),
+    'svoboda':xt(os.path.join(Pdir, 'media', 'svoboda.png')),
+    'z/5943':xt(os.path.join(Pdir, 'media', 'president.jpg')),
+    'z/5944':xt(os.path.join(Pdir, 'media', 'talk.jpg')),
+    'music/episodes':xt(os.path.join(Pdir, 'media', 'music.jpg')),
 }
 
 xbmcplugin.setContent(handle, 'videos')
@@ -121,18 +123,33 @@ def podcasts():
     xbmcplugin.endOfDirectory(handle)
 
 
+def play(url, title=None):
+    item = xbmcgui.ListItem(path=url)
+
+    if title:
+        item.setInfo(type='video', infoLabels={'title':title})
+
+    if '.mpd' in url:
+        item.setProperty('inputstreamaddon', 'inputstream.adaptive')
+        item.setProperty('inputstream.adaptive.manifest_type', 'mpd')
+        item.setProperty('inputstream.adaptive.license_type', 'com.widevine.alpha')
+        item.setProperty('inputstream.adaptive.license_key', 'https://cwip-shaka-proxy.appspot.com/no_auth||R{SSM}|')
+    
+        item.setMimeType('application/dash+xml')
+        item.setContentLookup(False)
+    elif '.m3u' in url:
+        item.setProperty('inputstream', 'inputstream.adaptive')
+        item.setProperty('inputstream.adaptive.manifest_type', 'hls')
+
+    xbmcplugin.setResolvedUrl(handle, True, item)
+
+
 def live():
     quality = addon.getSetting('LiveQuality')
 
     purl = stream_url.get(quality, stream_url['Auto (hls)'])
 
-    item = xbmcgui.ListItem()
-    item.setInfo(type='video', infoLabels={'title':'Live'})
-
-    if '.m3u8' in purl:
-        item.setProperty('inputstreamaddon', 'inputstream.adaptive')
-        item.setProperty('inputstream.adaptive.manifest_type', 'hls')
-
+    if '.m3u' in purl:
         if quality[:4] != 'Auto':
             m3u8 = get_html(purl)
             streams = re.findall(r'x(\d+).*?(http.*?)$', m3u8, flags=re.MULTILINE | re.DOTALL)
@@ -140,23 +157,13 @@ def live():
             if stream:
                 purl = stream[0]
 
-    elif '.mpd' in purl:
-        item.setProperty('inputstream.adaptive.manifest_type', 'mpd')
-        item.setProperty('inputstream.adaptive.license_type', 'com.widevine.alpha')
-        item.setProperty('inputstream.adaptive.license_key', 'https://cwip-shaka-proxy.appspot.com/no_auth||R{SSM}|')
-        
-        item.setMimeType('application/dash+xml')
-        item.setContentLookup(False)
-
-    item.setPath(purl)
-    xbmcplugin.setResolvedUrl(handle, True, item)
+    play(purl, 'Live')
 
 
 def show_content(params):
     page = int(params.get('p', 0))
 
     url = params['u'] = urllib.unquote_plus(params['u']).lstrip('/')
-
     base = params.get('b', BASE_URL)
 
     html = get_html(url if url[:4] == 'http' else '%s/%s' % (base, url), {'p':page})
@@ -207,7 +214,7 @@ def play_video(params):
     url = urllib.unquote_plus(params['u']).lstrip('/')
     base = params.get('b', BASE_URL)
 
-    html = get_html(url if url[:4] == 'http' else '%s/%s' % (base, url))
+    html = get_html(url if url[:4] == 'http' else '%s/%s' % (base, urllib.quote(url)))
 
     quality = addon.getSetting('VideoQuality')
 
@@ -229,9 +236,7 @@ def play_video(params):
         if audio:
             purl = audio[0]
 
-    item = xbmcgui.ListItem(path=purl)
-
-    xbmcplugin.setResolvedUrl(handle, True, item)
+    play(purl)
 
 
 def search(params):
