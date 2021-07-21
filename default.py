@@ -13,8 +13,8 @@ common.plugin = PLUGIN_NAME
 BASE_URL = "https://www.currenttime.tv"
 
 stream_url = {
-    'Auto (hls)': 'http://rfe-lh.akamaihd.net/i/rfe_tvmc5@383630/master.m3u8',
-    'Auto (mpd)': 'https://rfeingest-i.akamaihd.net/dash/live/677329-b/DASH_RFE-TVMC5/manifest.mpd',
+    'Auto (hls)': 'https://rfe-lh.akamaihd.net/i/rfe_tvmc5@383630/master.m3u8',
+    'Auto (mpd)': 'https://rfeingest-i.akamaihd.net/dash/live/677329/DASH_RFE-TVMC5/manifest.mpd',
     'rtmp': 'rtmp://cp107825.live.edgefcs.net/live/rfe_tvmc5@383651',
 }
 
@@ -103,11 +103,11 @@ def programs():
     add_item('Человек на карте', {'mode':'program', 'u':'person/episodes'}, icon=icon, fanart=fanarts['person/episodes'], isFolder=True)
     add_item('Смотри в оба', {'mode':'program', 'u':'smotrivoba/episodes'}, icon=icon, fanart=fanarts['smotrivoba/episodes'], isFolder=True)
     add_item('Ждём в гости', {'mode':'program', 'u':'welcome/episodes'}, icon=icon, fanart=fanarts['welcome/episodes'], isFolder=True)
-    add_item('Признаки жизни', {'mode':'program', 'u':'priznaki/episodes'}, icon=icon, fanart=fanarts['priznaki/episodes'], isFolder=True)
     add_item('Балтия', {'mode':'program', 'u':'baltia/episodes'}, icon=icon, fanart=fanarts['baltia/episodes'], isFolder=True)
     add_item('Азия', {'mode':'program', 'u':'asia/episodes'}, icon=icon, fanart=fanarts['asia/episodes'], isFolder=True)
     add_item('Америка', {'mode':'program', 'u':'amerika/episodes'}, icon=icon, fanart=fanarts['amerika/episodes'], isFolder=True)
     add_item('Америка. Большое путешествие', {'mode':'program', 'u':'z/21370/episodes'}, icon=icon, fanart=fanarts['z/21370/episodes'], isFolder=True)
+    add_item('Признаки жизни', {'mode':'program', 'u':'priznaki/episodes'}, icon=icon, fanart=fanarts['priznaki/episodes'], isFolder=True)
     add_item('Неизвестная Беларусь', {'mode':'program', 'u':'unknownbelarus/episodes'}, icon=icon, fanart=fanarts['unknownbelarus/episodes'], isFolder=True)
     xbmcplugin.endOfDirectory(handle)
 
@@ -134,11 +134,8 @@ def play(url, title=None):
         item.setProperty('inputstream.adaptive.manifest_type', 'mpd')
         item.setProperty('inputstream.adaptive.license_type', 'com.widevine.alpha')
         item.setProperty('inputstream.adaptive.license_key', 'https://cwip-shaka-proxy.appspot.com/no_auth||R{SSM}|')
-    
-        item.setMimeType('application/dash+xml')
-        item.setContentLookup(False)
     elif '.m3u' in url:
-        item.setProperty('inputstream', 'inputstream.adaptive')
+        item.setProperty('inputstreamaddon', 'inputstream.adaptive')
         item.setProperty('inputstream.adaptive.manifest_type', 'hls')
 
     xbmcplugin.setResolvedUrl(handle, True, item)
@@ -285,7 +282,12 @@ def search(params):
 
 def add_item(title, params={}, icon='', banner='', fanart='', poster='', thumb='', plot='', isFolder=False, isPlayable=False, url=None):
     item = xbmcgui.ListItem(title, iconImage = icon, thumbnailImage = thumb)
-    item.setInfo(type='Video', infoLabels={'title': title, 'plot': plot})
+    il = {'title': title, 'plot': plot}
+
+    if params.get('mode') == 'live':
+        il['watched'] = 'false'
+
+    item.setInfo(type='video', infoLabels=il)
 
     if isPlayable:
         item.setProperty('mediatype', 'video')
