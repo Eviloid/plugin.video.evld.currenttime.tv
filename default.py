@@ -46,6 +46,7 @@ fanarts = {
     'utro/episodes':xt(os.path.join(Pdir, 'media', 'utro.jpg')),
     'z/21370/episodes':xt(os.path.join(Pdir, 'media', 'roadtrip.jpg')),
     'https://www.svoboda.org/z/959':xt(os.path.join(Pdir, 'media', 'svoboda.jpg')),
+    'https://www.svoboda.org/z/16307/episodes':xt(os.path.join(Pdir, 'media', 'svoboda.jpg')),
     'https://www.svoboda.org/music/episodes':xt(os.path.join(Pdir, 'media', 'svoboda.jpg')),
     'https://www.golosameriki.com/z/5943':xt(os.path.join(Pdir, 'media', 'voa.jpg')),
     'https://www.golosameriki.com/z/5944':xt(os.path.join(Pdir, 'media', 'voa.jpg')),
@@ -58,6 +59,7 @@ icons = {
     'z/5943':xt(os.path.join(Pdir, 'media', 'president.jpg')),
     'z/5944':xt(os.path.join(Pdir, 'media', 'talk.jpg')),
     'music/episodes':xt(os.path.join(Pdir, 'media', 'music.jpg')),
+    'z/16307':xt(os.path.join(Pdir, 'media', 'pravo.jpg')),
 }
 
 xbmcplugin.setContent(handle, 'videos')
@@ -120,6 +122,7 @@ def podcasts():
         add_item('Знаем Talk', {'mode':'program', 'u':'https://www.golosameriki.com/z/5944', 'b':'https://www.golosameriki.com'}, icon=icons['z/5944'], fanart=fanarts['https://www.golosameriki.com/z/5944'], plot='Знаем Talk – это еженедельный подкаст о языке, на котором мы говорим, и о языках, которые нас окружают', isFolder=True)
     if addon.getSetting('ShowRF') == 'true':
         add_item('Музыка на "Свободе"', {'mode':'program', 'u':'https://www.svoboda.org/music/episodes', 'b':'https://www.svoboda.org'}, icon=icons['music/episodes'], fanart=fanarts['https://www.svoboda.org/music/episodes'], plot='Артемий Троицкий, музыкальный критик и активист широкого профиля, представляет в своём подкасте и его радиоверсии талантливую новую музыку самых разных стилей и направлений.', isFolder=True)
+        add_item('Человек имеет право', {'mode':'program', 'u':'https://www.svoboda.org/z/16307/episodes', 'b':'https://www.svoboda.org'}, icon=icons['z/16307'], fanart=fanarts['https://www.svoboda.org/z/16307/episodes'], plot='Всё, что происходит в жизни каждого, связано с правами и свободами. Право на выбор, право на жизнь и здоровье, право на самовыражение и многое другое. “Человек имеет право” — это подкаст, который ведем мы, судебные обозреватели Радио Свобода Марьяна Торочешникова и Наталья Джанполадова. Вместе мы выясняем, как устроен окружающий нас мир прав и обязанностей, почему он устроен именно так и что делать, чтобы отстоять свои права.', isFolder=True)
     xbmcplugin.endOfDirectory(handle)
 
 
