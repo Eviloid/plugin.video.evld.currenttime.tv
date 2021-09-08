@@ -15,8 +15,8 @@ common.plugin = PLUGIN_NAME
 BASE_URL = "https://www.currenttime.tv"
 
 stream_url = {
-    'Auto (hls)': 'http://rfe-lh.akamaihd.net/i/rfe_tvmc5@383630/master.m3u8',
-    'Auto (mpd)': 'https://rfeingest-i.akamaihd.net/dash/live/677329-b/DASH_RFE-TVMC5/manifest.mpd',
+    'Auto (hls)': 'https://rfe-lh.akamaihd.net/i/rfe_tvmc5@383630/master.m3u8',
+    'Auto (mpd)': 'https://rfeingest-i.akamaihd.net/dash/live/677329/DASH_RFE-TVMC5/manifest.mpd',
     'rtmp': 'rtmp://cp107825.live.edgefcs.net/live/rfe_tvmc5@383651',
 }
 
@@ -142,9 +142,6 @@ def play(url, title=None):
         item.setProperty('inputstream.adaptive.manifest_type', 'mpd')
         item.setProperty('inputstream.adaptive.license_type', 'com.widevine.alpha')
         item.setProperty('inputstream.adaptive.license_key', 'https://cwip-shaka-proxy.appspot.com/no_auth||R{SSM}|')
-    
-        item.setMimeType('application/dash+xml')
-        item.setContentLookup(False)
     elif '.m3u' in url:
         item.setProperty('inputstream', 'inputstream.adaptive')
         item.setProperty('inputstream.adaptive.manifest_type', 'hls')
