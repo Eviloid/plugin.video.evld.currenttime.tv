@@ -46,6 +46,7 @@ fanarts = {
     'amerika/episodes':xt(os.path.join(Pdir, 'media', 'amerika.jpg')),
     'priznaki/episodes':xt(os.path.join(Pdir, 'media', 'priznaki.jpg')),
     'utro/episodes':xt(os.path.join(Pdir, 'media', 'utro.jpg')),
+    'asia-360/episodes':xt(os.path.join(Pdir, 'media', 'asia-360.jpg')),
     'z/21370/episodes':xt(os.path.join(Pdir, 'media', 'roadtrip.jpg')),
     'https://www.svoboda.org/z/959':xt(os.path.join(Pdir, 'media', 'svoboda.jpg')),
     'https://www.svoboda.org/music/episodes':xt(os.path.join(Pdir, 'media', 'svoboda.jpg')),
@@ -112,6 +113,7 @@ def programs():
     add_item('Ждём в гости', {'mode':'program', 'u':'welcome/episodes'}, icon=icon, fanart=fanarts['welcome/episodes'], isFolder=True)
     add_item('Балтия', {'mode':'program', 'u':'baltia/episodes'}, icon=icon, fanart=fanarts['baltia/episodes'], isFolder=True)
     add_item('Азия', {'mode':'program', 'u':'asia/episodes'}, icon=icon, fanart=fanarts['asia/episodes'], isFolder=True)
+    add_item('Азия 360°', {'mode':'program', 'u':'asia-360/episodes'}, icon=icon, fanart=fanarts['asia-360/episodes'], isFolder=True)
     add_item('Америка', {'mode':'program', 'u':'amerika/episodes'}, icon=icon, fanart=fanarts['amerika/episodes'], isFolder=True)
     add_item('Америка. Большое путешествие', {'mode':'program', 'u':'z/21370/episodes'}, icon=icon, fanart=fanarts['z/21370/episodes'], isFolder=True)
     add_item('Неизвестная Беларусь', {'mode':'program', 'u':'unknownbelarus/episodes'}, icon=icon, fanart=fanarts['unknownbelarus/episodes'], isFolder=True)
