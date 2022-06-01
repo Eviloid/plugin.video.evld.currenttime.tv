@@ -15,8 +15,8 @@ common.plugin = PLUGIN_NAME
 BASE_URL = "https://www.currenttime.tv"
 
 stream_url = {
-    'Auto (hls)': 'https://rfe-lh.akamaihd.net/i/rfe_tvmc5@383630/master.m3u8',
-    'Auto (mpd)': 'https://rfeingest-i.akamaihd.net/dash/live/677329/DASH_RFE-TVMC5/manifest.mpd',
+    'Auto (hls)': 'https://rfe-ingest.akamaized.net/hls/live/2033043/tvmc05/master.m3u8',
+    'Auto (mpd)': 'https://rfe-ingest.akamaized.net/dash/live/2033030/tvmc05/manifest.mpd',
     'rtmp': 'rtmp://cp107825.live.edgefcs.net/live/rfe_tvmc5@383651',
 }
 
