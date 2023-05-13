@@ -48,6 +48,7 @@ fanarts = {
     'utro/episodes':xt(os.path.join(Pdir, 'media', 'utro.jpg')),
     'asia-360/episodes':xt(os.path.join(Pdir, 'media', 'asia-360.jpg')),
     'z/21370/episodes':xt(os.path.join(Pdir, 'media', 'roadtrip.jpg')),
+    'z/20708/episodes':xt(os.path.join(Pdir, 'media', 'news.jpg')),
     'https://www.svoboda.org/z/959':xt(os.path.join(Pdir, 'media', 'svoboda.jpg')),
     'https://www.svoboda.org/music/episodes':xt(os.path.join(Pdir, 'media', 'svoboda.jpg')),
     'https://www.golosameriki.com/z/5943':xt(os.path.join(Pdir, 'media', 'voa.jpg')),
@@ -87,7 +88,12 @@ def get_html(url, params={}, noerror=True):
 
 def main_menu():
     add_item('[B]Смотреть ТВ[/B]', {'mode':'live'}, icon=icon, fanart=fanart, isPlayable=True)
-    show_content({'mode':'program', 'u':'p/7363.html'}) # Новости. Коротко (последний выпуск)
+    
+    if addon.getSetting('LastNews') == 'true':
+        show_content({'mode':'program', 'u':'p/7363.html'}) # Новости. Коротко (последний выпуск)
+    else:
+        add_item('Новости', {'mode':'program', 'u':'z/20708/episodes'}, fanart=fanart, isFolder=True)
+
     add_item('Избранные программы', {'mode':'programs'}, fanart=fanart, isFolder=True)
     add_item('Эфиры', {'mode':'program', 'u':'z/17317'}, fanart=fanart, isFolder=True)
     add_item('Репортажи', {'mode':'program', 'u':'report/episodes'}, fanart=fanart, isFolder=True)
@@ -180,6 +186,8 @@ def show_content(params):
     if url != 'p/7363.html':
         container = container[0]
 
+    is_news = url == 'z/20708/episodes'
+
     blocks = common.parseDOM(container, 'div', attrs={'class':'media-block .*?'})
 
     for block in blocks:
@@ -195,7 +203,11 @@ def show_content(params):
         img = common.parseDOM(block, 'img', ret='src')[0]
         date = common.parseDOM(block, 'span', attrs={'class':'date .*?'})
 
-        plot = '[B]{0}[/B]\n\n{1}'.format(date[0] if date else '', title)
+        if is_news:
+            plot = title.capitalize()
+            title = date[0] if date else title
+        else:
+            plot = '[B]{0}[/B]\n\n{1}'.format(date[0] if date else '', title)
 
         thumb = re.sub(r'_w\w+', '_w512_r1', img)
 
@@ -208,7 +220,7 @@ def show_content(params):
         add_item(title, item_params, thumb=thumb, plot=plot, fanart=fan, isPlayable=True)
 
 
-    if common.parseDOM(html, 'p', attrs={'class':'buttons btn--load-more'}):
+    if common.parseDOM(html, 'p', attrs={'class':'buttons btn--load-more'}) and not is_news:
         params['p'] = page + 1
         fan = fanarts.get(url, fanart)
         add_item('Далее > %i' % (1 + params['p']), params, fanart=fan, isFolder=True)
