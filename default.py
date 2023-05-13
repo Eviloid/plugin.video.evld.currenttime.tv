@@ -164,7 +164,7 @@ def live():
 
     if '.m3u' in purl:
         if quality[:4] != 'Auto':
-            m3u8 = get_html(purl)
+            m3u8 = get_html(purl).decode('utf-8')
             streams = re.findall(r'x(\d+).*?(http.*?)$', m3u8, flags=re.MULTILINE | re.DOTALL)
             stream = [s[1] for s in streams if '{}p'.format(s[0]) == quality]
             if stream:
