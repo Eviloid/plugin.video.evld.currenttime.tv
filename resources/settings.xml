@@ -5,7 +5,7 @@
         <setting id="VideoQuality" label= "Качество видео" type="select" default="720p" values="1080p|720p|360p|240p" visible="true"/>
     </category>
     <category label="Программы">
-        <setting id="LastNews" label= "Только последний выпуск новостей" type="bool" default="true" visible="true"/>
+        <!--setting id="LastNews" label= "Только последний выпуск новостей" type="bool" default="true" visible="true"/-->
         <setting id="ShowRF" label= "Показывать видео и подкасты Радио Свободы" type="bool" default="false" visible="true"/>
         <setting id="ShowVOA" label= "Показывать подкасты Голоса Америки" type="bool" default="false" visible="true"/>
     </category>

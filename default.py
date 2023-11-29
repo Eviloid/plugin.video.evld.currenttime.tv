@@ -48,7 +48,7 @@ fanarts = {
     'utro/episodes':xt(os.path.join(Pdir, 'media', 'utro.jpg')),
     'asia-360/episodes':xt(os.path.join(Pdir, 'media', 'asia-360.jpg')),
     'z/21370/episodes':xt(os.path.join(Pdir, 'media', 'roadtrip.jpg')),
-    'z/20708/episodes':xt(os.path.join(Pdir, 'media', 'news.jpg')),
+    'live-archive':xt(os.path.join(Pdir, 'media', 'spec.jpg')),
     'https://www.svoboda.org/z/959':xt(os.path.join(Pdir, 'media', 'svoboda.jpg')),
     'https://www.svoboda.org/music/episodes':xt(os.path.join(Pdir, 'media', 'svoboda.jpg')),
     'https://www.golosameriki.com/z/5943':xt(os.path.join(Pdir, 'media', 'voa.jpg')),
@@ -88,12 +88,7 @@ def get_html(url, params={}, noerror=True):
 
 def main_menu():
     add_item('[B]Смотреть ТВ[/B]', {'mode':'live'}, icon=icon, fanart=fanart, isPlayable=True)
-    
-    if addon.getSetting('LastNews') == 'true':
-        show_content({'mode':'program', 'u':'p/7363.html'}) # Новости. Коротко (последний выпуск)
-    else:
-        add_item('Новости', {'mode':'program', 'u':'z/20708/episodes'}, fanart=fanart, isFolder=True)
-
+    add_item('Спецэфир', {'mode':'program', 'u':'live-archive'}, fanart=fanart, isFolder=True)
     add_item('Избранные программы', {'mode':'programs'}, fanart=fanart, isFolder=True)
     add_item('Эфиры', {'mode':'program', 'u':'z/17317'}, fanart=fanart, isFolder=True)
     add_item('Репортажи', {'mode':'program', 'u':'report/episodes'}, fanart=fanart, isFolder=True)
