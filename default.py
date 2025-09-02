@@ -176,14 +176,7 @@ def show_content(params):
 
     html = get_html(url if url[:4] == 'http' else '%s/%s' % (base, url), {'p':page})
 
-    container = common.parseDOM(html, 'div', attrs={'class':'media-block-wrap'})
-
-    if url != 'p/7363.html':
-        container = container[0]
-
-    is_news = url == 'z/20708/episodes'
-
-    blocks = common.parseDOM(container, 'div', attrs={'class':'media-block .*?'})
+    blocks = common.parseDOM(html, 'div', attrs={'class':'media-block .*?'})
 
     for block in blocks:
 
@@ -198,11 +191,7 @@ def show_content(params):
         img = common.parseDOM(block, 'img', ret='src')[0]
         date = common.parseDOM(block, 'span', attrs={'class':'date .*?'})
 
-        if is_news:
-            plot = title.capitalize()
-            title = date[0] if date else title
-        else:
-            plot = '[B]{0}[/B]\n\n{1}'.format(date[0] if date else '', title)
+        plot = '[B]{0}[/B]\n\n{1}'.format(date[0] if date else '', title)
 
         thumb = re.sub(r'_w\w+', '_w512_r1', img)
 
@@ -215,7 +204,12 @@ def show_content(params):
         add_item(title, item_params, thumb=thumb, plot=plot, fanart=fan, isPlayable=True)
 
 
-    if common.parseDOM(html, 'p', attrs={'class':'buttons btn--load-more'}) and not is_news:
+    has_load_more_btn = [
+        common.parseDOM(html, "p", attrs={"class": "buttons btn--load-more"}),
+        common.parseDOM(html, "a", attrs={"class": "btn link-showMore btn__text"}),
+    ]
+
+    if any(has_load_more_btn):
         params['p'] = page + 1
         fan = fanarts.get(url, fanart)
         add_item('Далее > %i' % (1 + params['p']), params, fanart=fan, isFolder=True)
