@@ -282,7 +282,7 @@ def search(params):
             title = common.replaceHTMLCodes(title)
 
             info = common.parseDOM(video, 'p', attrs={'class':'perex .*?'})
-            plot = '[B]%s[/B]\n%s' % (date, common.replaceHTMLCodes(info[0]) if info else '')
+            plot = '[B]%s[/B]\n%s' % (date, common.replaceHTMLCodes(info[0].replace('<b>', '[B]').replace('</b>', '[/B]')) if info else '')
 
             add_item(title, {'mode':'play', 'u':href}, plot=plot, thumb=thumb, fanart=fanart, isPlayable=True)
 
