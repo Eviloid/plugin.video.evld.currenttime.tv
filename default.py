@@ -232,7 +232,7 @@ def play_video(params):
 
     html = get_html(frame[0])
 
-    data = re.compile(r'data-sources="(.+?)" data-lt-on-play="').findall(html)
+    data = re.compile(r'data-sources="(.+?)" data-pub_datetime="').findall(html)
     if data:
         data = json.loads(common.replaceHTMLCodes(data[0]))
 
